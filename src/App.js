@@ -5,6 +5,7 @@ import PostDetails from "./components/PostDetails";
 import NewPost from "./components/NewPost";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import EditPost from "./components/EditModal";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/posts/:id" element={<PostDetails />} />
         <Route path="/form" element={<NewPost />} />
+        <Route path="/edit/:id" element={<EditPost />} />
       </Routes>
     </BrowserRouter>
   );

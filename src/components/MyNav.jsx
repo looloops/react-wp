@@ -10,10 +10,7 @@ function MyNavbar() {
         <Container>
           <Navbar.Brand href="#home">Headless WP</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link>
-              {" "}
-              <Link to="/">Home</Link>
-            </Nav.Link>
+            <Link to="/">Home</Link>
           </Nav>
         </Container>
       </Navbar>

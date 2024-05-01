@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import { baseApiUrl } from "../constants.js";
-import { Link } from "react-router-dom/dist";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { Row, Col, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import NewPost from "./NewPost.jsx";
+import EditModal from "./EditModal.jsx";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [deletes, setDeletes] = useState(0);
   const [lastPage, setLastPage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [postToEdit, setPostToEdit] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -58,47 +60,52 @@ const Home = () => {
     });
   };
 
+  const handleEdit = (postId) => {
+    setPostToEdit(postId);
+    setShowEditModal(true);
+  };
+
   return (
     <>
       <Container>
-        <NewPost />
+        <div className="bg-light">
+          <div className="p-3 w-100 my-4">
+            <h4>Crea un nuovo articolo:</h4>
+            <NewPost />
+          </div>
+        </div>
         <Row xs={1} md={2}>
           {posts.map((post) => (
-            <>
-              <Col key={post.id} className="d-flex">
-                <Card>
-                  <Card.Img
-                    style={{ height: "200px" }}
-                    className="object-fit-cover"
-                    variant="top"
-                    src={
-                      post._embedded && post._embedded["wp:featuredmedia"]
-                        ? post._embedded["wp:featuredmedia"][0].source_url
-                        : "../../public/"
-                    }
-                  />
+            <Col key={post.id} className="d-flex">
+              <Card>
+                <Card.Img
+                  style={{ height: "200px" }}
+                  className="object-fit-cover"
+                  variant="top"
+                  src={
+                    post._embedded && post._embedded["wp:featuredmedia"]
+                      ? post._embedded["wp:featuredmedia"][0].source_url
+                      : "../../public/"
+                  }
+                />
 
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title>
-                      {/* <Link to={`/posts/${post.id}`}>{post.title.rendered}</Link> */}
-                      {post.title.rendered}
-                    </Card.Title>
-                    <Card.Text dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}></Card.Text>
-                    <div className="d-flex justify-content-center mt-auto">
-                      <Button className="mt-auto mx-1" onClick={() => navigate(`/posts/${post.id}`)}>
-                        Details
-                      </Button>
-                      <Button className="mt-auto mx-1" onClick={() => navigate(`/edit/${post.id}`)}>
-                        Edit
-                      </Button>
-                      <Button className="mt-auto mx-1" onClick={() => deletePost(post.id)}>
-                        Delete
-                      </Button>
-                    </div>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </>
+                <Card.Body className="d-flex flex-column">
+                  <Card.Title>{post.title.rendered}</Card.Title>
+                  <Card.Text dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}></Card.Text>
+                  <div className="d-flex ms-auto">
+                    <Button className=" mx-1" onClick={() => navigate(`/posts/${post.id}`)}>
+                      Details
+                    </Button>
+                    <Button className=" mx-1" onClick={() => handleEdit(post.id)}>
+                      Edit
+                    </Button>
+                    <Button className=" mx-1" onClick={() => deletePost(post.id)}>
+                      Delete
+                    </Button>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
           ))}
         </Row>
 
@@ -130,6 +137,8 @@ const Home = () => {
           </Col>
         </Row>
       </Container>
+
+      {showEditModal && <EditModal postId={postToEdit} onClose={() => setShowEditModal(false)} />}
     </>
   );
 };

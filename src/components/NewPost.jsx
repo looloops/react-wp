@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { baseApiUrl } from "../constants.js";
-import Alert from "react-bootstrap/Alert";
 import { Button, Form } from "react-bootstrap";
 
 const PostForm = () => {
